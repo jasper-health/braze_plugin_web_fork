@@ -20,6 +20,6 @@
 
 * Improved Documentation
 
-# 0.1.5 - January 2024
+# 0.1.6 - January 2024
 
 * Added the `signature` argument for `BrazeClient#identify()`
