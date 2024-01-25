@@ -1,6 +1,6 @@
 name: braze_plugin_web
 description: Unofficial Braze Plugin for Flutter for Web. It is mostly a Flutter Web Plugin acting as a wrapper around the official Braze Web SDK.
-repository: https:/jasper-health/braze_plugin_web_fork
+repository: https://github.com/jasper-health/braze_plugin_web_fork
 version: 0.1.5
 
 environment:
