@@ -22,4 +22,4 @@
 
 # 0.1.6 - January 2024
 
-* Added the `signature` argument for `BrazeClient#identify()`
+* Added the `signature` argument for `BrazeClient.identify()`
