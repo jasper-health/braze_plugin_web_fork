@@ -29,7 +29,7 @@ class BrazePluginJS {
     Function(ListBrazeCardsJsImpl cards) d,
   );
 
-  external static requestContentCardsRefresh<T>(
+  external static requestContentCardsRefresh(
     Function() successCallback,
     Function() errorCallback,
   );

@@ -43,3 +43,7 @@
 # 0.1.11 - March 2024
 
 - Add `User.getUserId()` and `getUserId()`
+
+# 0.1.12 - March 2024
+
+- Fix `BrazePluginJS.requestContentCardsRefresh()` signature
