@@ -25,6 +25,8 @@ class BrazePluginJS {
 
   external static requestImmediateDataFlush();
 
+  external static ListBrazeCardsJsImpl getCachedContentCards();
+
   external static subscribeToContentCardsUpdates(
     Function(ListBrazeCardsJsImpl cards) d,
   );

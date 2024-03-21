@@ -47,3 +47,8 @@
 # 0.1.12 - March 2024
 
 - Fix `BrazePluginJS.requestContentCardsRefresh()` signature
+
+# 0.1.13 - March 2024
+
+- Add `getCachedContentCards()`
+
