@@ -26,6 +26,24 @@ class BrazeClient {
   /// TODO: find a way to parse ContentCard back to js and call [.dismissContentCard()]
   Map<String, dynamic> _savedContentCards = {};
 
+  // Used by [getCachedContentCards] and [subscribeToContentCardsUpdates]
+  List<Map<String, dynamic>> _parseContentCardsJs(List<BrazeCardImpl> cardsJs) {
+    return cardsJs.map((e) {
+      final map = Map<String, dynamic>.from(dartify(e));
+
+      _savedContentCards.addAll({map["id"]: e});
+
+      if (map['extras'] is Map<String, dynamic>) {
+        final Map<String, dynamic> parsedMap =
+        (map['extras'] as Map<String, dynamic>)
+            .map((key, value) => MapEntry(key, parseDynamic(value)));
+        map['extras'] = parsedMap;
+      }
+
+      return map;
+    }).toList();
+  }
+
   /// A more robust initializeR to replace [initialize], allowing the
   /// provision of [InitializationOptions]
   void initializeWithOptions({
@@ -135,6 +153,22 @@ class BrazeClient {
     return BrazePluginJS.getUser().removeFromSubscriptionGroup(groupId);
   }
 
+  // get all currently available cards from the last content cards refresh
+  List<Map<String, dynamic>> getCachedContentCards() {
+    final ContentCards response = ContentCards.getInstance(BrazePluginJS.getCachedContentCards());
+    final cardsJs = response.jsObject.cards;
+
+    if (cardsJs.isNotEmpty) {
+      try {
+        return _parseContentCardsJs(cardsJs);
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+
+    return <Map<String, dynamic>>[];
+  }
+
   /// subscribe to braze content cards
   Stream<List<Map<String, dynamic>>> subscribeToContentCardsUpdates() {
     late StreamController<List<Map<String, dynamic>>> controller;
@@ -145,24 +179,7 @@ class BrazeClient {
 
       if (cardsJs.isNotEmpty) {
         try {
-          final List<Map<String, dynamic>> parsedCards = cardsJs.map((e) {
-            final map = Map<String, dynamic>.from(dartify(e));
-
-            ///saving this to remove if need for later
-            _savedContentCards.addAll({map["id"]: e});
-
-            //TODO: found another way how to parse, parsing extras to normal dart types
-            //we doing this to parse custom braze card type such as bool which is comming to us in string type
-            if (map['extras'] is Map<String, dynamic>) {
-              final Map<String, dynamic> parsedMap =
-                  (map['extras'] as Map<String, dynamic>)
-                      .map((key, value) => MapEntry(key, parseDynamic(value)));
-              map['extras'] = parsedMap;
-            }
-            return map;
-          }).toList();
-
-          controller.add(parsedCards);
+          controller.add(_parseContentCardsJs(cardsJs));
         } catch (e) {
           //TODO: log implementation, this means we cannot parse data in correct way or response structure changed
           log(e.toString());
